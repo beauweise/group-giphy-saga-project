@@ -19,11 +19,12 @@ class Search extends Component {
         })
     }
 
+
+   
+
     submit = () => {
-        axios.post('/', this.state).then((response) => {
-            console.log(response);
-            
-        })
+          this.props.dispatch({type: 'SET_SEARCH', payload: this.state})
+ 
         
     }
 

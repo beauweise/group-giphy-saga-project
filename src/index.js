@@ -9,9 +9,21 @@ import logger from "redux-logger";
 import axios from "axios";
 
 
+const reducer = (state='') =>{
+  return state
+}
+
 
 function* watcherSaga() {
+  yield takeEvery('SET_SEARCH', searchFunction)
+}
 
+function* searchFunction(action){
+  try{
+    yield axios.post('/', action.payload)
+  } catch (error){
+    console.log('error', error)
+  }
 }
 
 
@@ -19,6 +31,7 @@ const sagaMiddleware = createSagaMiddleware();
 
 const storeInstance = createStore(
   combineReducers({
+    reducer,
   }),
   applyMiddleware(sagaMiddleware, logger)
 );
