@@ -9,19 +9,29 @@ import logger from "redux-logger";
 import axios from "axios";
 
 
-const reducer = (state='') =>{
-  return state
+
+const reducer = (state = [], action) => {
+  console.log('in Reducer', state, action);
+
+  if (action.type === 'ADD_GIPHY') {
+    return action.payload.data;
+  }
+  return state;
 }
+
+
+
 
 
 function* watcherSaga() {
   yield takeEvery('SET_SEARCH', searchFunction)
 }
 
-function* searchFunction(action){
-  try{
-    yield axios.post('/', action.payload)
-  } catch (error){
+function* searchFunction(action) {
+  try {
+    const giphyResponse = yield axios.post('/', action.payload)
+    yield put({ type: 'ADD_GIPHY', payload: giphyResponse.data })
+  } catch (error) {
     console.log('error', error)
   }
 }
