@@ -19,12 +19,24 @@ const reducer = (state = [], action) => {
   return state;
 }
 
-
+const favoritesReducer = (state = [], action) => {
+    console.log('in favorites Reducer', state, action);
+    if (action.type === 'FAVORITES_FROM_DB') {
+        return action.payload
+    }
+    return state;
+}
 
 
 
 function* watcherSaga() {
-  yield takeEvery('SET_SEARCH', searchFunction)
+  yield takeEvery('SET_SEARCH', searchFunction);
+  yield takeEvery('ADD_FAVORITE', addFavorite);
+  yield takeEvery('GET_FAVORITES', getFavorites);
+}
+
+function* addFavorite(address) {
+  axios.post('/api/favorite', {address: address});
 }
 
 function* searchFunction(action) {
@@ -36,12 +48,25 @@ function* searchFunction(action) {
   }
 }
 
+function* getFavorites() {
+    try {
+    const favoriteResponse = yield axios.get('/api/favorite');
+    console.log('favoriteResponse', favoriteResponse);
+    
+    yield put({type: 'FAVORITES_FROM_DB', payload: favoriteResponse.data});
+    }
+    catch(error) {
+        console.log('error', error);
+        
+    }
+}
 
 const sagaMiddleware = createSagaMiddleware();
 
 const storeInstance = createStore(
   combineReducers({
     reducer,
+    favoritesReducer
   }),
   applyMiddleware(sagaMiddleware, logger)
 );

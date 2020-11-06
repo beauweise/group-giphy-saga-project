@@ -1,5 +1,6 @@
 const express = require('express');
 const pool = require('../modules/pool');
+const axios = require('axios');
 
 const router = express.Router();
 
@@ -17,12 +18,30 @@ router.get ('/',(req,res)=>{
 
 // return all favorite images
 router.get('/', (req, res) => {
-  res.sendStatus(200);
+  // return all favorites
+  const queryText = `SELECT * FROM favorites ORDER BY name ASC`;
+  pool.query(queryText)
+      .then( (result) => {
+          res.send(result.rows);
+      })
+      .catch( (error) => {
+          console.log(`Error on query ${error}`);
+          res.sendStatus(500);
+      });
 });
 
 // add a new favorite 
 router.post('/', (req, res) => {
-  res.sendStatus(200);
+  console.log('req.body', req.body);
+  let queryText = `insert into favorites (url) values ($1);`;
+  pool.query(queryText, [req.body.address.payload]).
+  then((response) => {
+    console.log('added successfully', response);
+    res.sendStatus(201);
+  }).catch((error) => {
+    console.log('error in adding new favorite', error);
+    res.sendStatus(500);
+  })
 });
 
 // update given favorite with a category id

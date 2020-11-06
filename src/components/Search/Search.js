@@ -28,6 +28,11 @@ class Search extends Component {
         
     }
 
+    addFavorite = (address) => {
+      // console.log('address', address);
+      // send address to store in database
+      this.props.dispatch({type: 'ADD_FAVORITE', payload: address});
+    }
 
   render() {
     return (
@@ -40,7 +45,12 @@ class Search extends Component {
           {/* {JSON.stringify(this.props.reduxState.reducer)} */}
           {this.props.reduxState.reducer.map((taco)=>{
               // return <p key = {taco.id}>{taco.url}</p>
-            return (<iframe alt = '' key = {taco.id} src = {taco.embed_url}></iframe>)
+            return (
+              <>
+                <iframe alt = '' key = {taco.id} src = {taco.embed_url}></iframe>
+                <button onClick={()=>this.addFavorite(taco.embed_url)}>Favorite</button>
+              </>
+              )
           })}
           
         </div>
