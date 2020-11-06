@@ -40,7 +40,7 @@ class Search extends Component {
           {/* {JSON.stringify(this.props.reduxState.reducer)} */}
           {this.props.reduxState.reducer.map((taco)=>{
               // return <p key = {taco.id}>{taco.url}</p>
-            return (<img alt = ''key = {taco.id} src = {taco.url}></img>)
+            return (<iframe alt = '' key = {taco.id} src = {taco.embed_url}></iframe>)
           })}
           
         </div>
